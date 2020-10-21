@@ -18,13 +18,14 @@ recline <- recline %>%
 
 recline$inches = sapply(strsplit(as.character(recline$height),"'|\""),
                          function(x){12*as.numeric(x[1]) + as.numeric(x[2])})
-ggplot(data = recline, aes(x=inches, y =..density..))+geom_histogram(bins=18)+
-  labs(x= "Height (in)", y= "Density", title = "Distriburion of Heights of Respondents")+
+
+ggplot(data = recline, aes(x=inches))+geom_histogram(bins=19, color = "black", fill = "#0073C2FF")+
+  labs(x= "Height (in)", y= "Frequency", title = "Distribution of Heights of Respondents")+
   theme_minimal()
   
 recline$recline <- factor(recline$recline, levels=c("Never", "Once in a while", "About half the time", "Usually", "Always"))
-ggplot(data = recline, aes(x=recline))+ geom_bar()+
-  labs(x= "Repsonse to \'Do you ever recline your seat when you fly?\'", y= "Density", title = "Distriburion of Reclining Responses")+
+ggplot(data = recline, aes(x=recline))+ geom_bar(color = "black", fill = "#0073C2FF")+
+  labs(x= "Repsonse to \'Do you ever recline your seat when you fly?\'", y= "Frequency", title = "Distribution of Reclining Responses")+
   theme_minimal()
 
 

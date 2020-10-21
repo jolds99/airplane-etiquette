@@ -6,8 +6,11 @@ library(ggplot2)
 #### Reclining vs height ####
 nrow(airplane_etiquette)-
   length(which(is.na(`Do you ever recline your seat when you fly?`) | is.na(`How tall are you?`)))
+
 recline <- airplane_etiquette[-which(is.na(`Do you ever recline your seat when you fly?`) | is.na(`How tall are you?`)),]
 colnames(recline)[c(3,4)] <- c("recline", "height")
+length(which(recline$height=="6\'6\" and above"))
+length(which(recline$height=="Under 5 ft."))
 
 recline <- recline %>%
   mutate(height = if_else(height == "6\'6\" and above","6\'6\"", height)) %>%

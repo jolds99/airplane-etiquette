@@ -39,6 +39,8 @@ babyunruly = children %>% select(RespondentID, `Do you have any children under 1
 
 babyunruly$Question = factor(babyunruly$Question, levels = c("In general, is itrude to bring a baby on a plane?",
                                                                   "In general, is it rude to knowingly bring unruly children on a plane?"))
+
+## Distribution of both questions together
 ggplot(babyunruly, aes(x = Question, fill = factor(Response))) + 
          geom_bar(stat = "count", position = position_dodge()) + 
          ggtitle("Distribution of Baby & Unruly Children Questions") + 

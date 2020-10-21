@@ -75,6 +75,11 @@ ggplot(data = recline, aes(x=recline))+ geom_bar(color = "black", fill = "#0073C
   labs(x= "Repsonse to \'Do you ever recline your seat when you fly?\'", y= "Frequency", title = "Distribution of Reclining Responses")+
   theme_minimal()
 
+library(kableExtra)
+reclinetab <- recline %>%
+  count(recline, inches) %>% spread(inches,n)
+kable(reclinetab, format = "latex") %>%
+  kable_styling(latex_options="scale_down")
 
 
 #### Armrest ####

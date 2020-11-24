@@ -1,10 +1,10 @@
-attach(airplane_etiquette)
+
 library(tidyverse)
 library(ggplot2)
 library(knitr)
 #### Tolerance of Babies and Children ####
 airplane_etiquette = read_csv("airplane-etiquette.csv")
-
+attach(airplane_etiquette)
 # Creating subset of data with complete cases for the three questions
 children = airplane_etiquette[which(!is.na(`Do you have any children under 18?`) &
                                    !is.na(`In general, is itrude to bring a baby on a plane?`) &
@@ -74,7 +74,7 @@ ggplot(data = recline, aes(x=inches))+geom_histogram(bins=19, color = "black", f
   
 recline$recline <- factor(recline$recline, levels=c("Never", "Once in a while", "About half the time", "Usually", "Always"))
 ggplot(data = recline, aes(x=recline))+ geom_bar(color = "black", fill = "#0073C2FF")+
-  labs(x= "Repsonse to \'Do you ever recline your seat when you fly?\'", y= "Frequency", title = "Distribution of Reclining Responses")+
+  labs(x= "Response to \'Do you ever recline your seat when you fly?\'", y= "Frequency", title = "Distribution of Reclining Responses")+
   theme_minimal()
 
 library(kableExtra)

@@ -51,10 +51,15 @@ femaledf2 <- data.frame(Age = c("18-29", "30-44", "45-60", "60+" ), Gender = "Fe
 femalepred2 <- predict(twoseat, newdata = femaledf2, "probs")
 femalepred2 <- cbind(femaledf2, femalepred2)
 pred2 <- rbind(malepred2, femalepred2)
-pred2 <- melt(pred2, value.name = "prob")
+pred2 <- melt(pred2, value.name = "prob")%>%
+  rename("Response" = "variable")
 
-ggplot(pred2, aes(x = (Age), y = prob, colour = variable)) +
+ggplot(pred2, aes(x = Age, y = prob, colour = Response)) +
   geom_point() +
+  labs(title = "Who should have claim over the middle armrest in a row of two seats?",
+       subtitle = "Predicted probability that someone in each category would choose each response",
+       x = "Age", y = "Probability of choosing response")+
+  theme_minimal()+
   facet_grid(Gender ~ ., scales = "free")
 
 
@@ -70,14 +75,14 @@ femaledf3 <- data.frame(Age = c("18-29", "30-44", "45-60", "60+" ), Gender = "Fe
 femalepred3 <- predict(threeseat, newdata = femaledf3, "probs")
 femalepred3 <- cbind(femaledf3, femalepred3)
 pred3 <- rbind(malepred3, femalepred3)
-pred3 <- melt(pred3, value.name = "prob")
+pred3 <- melt(pred3, value.name = "prob") %>%
+  rename("Response" = "variable")
 
-ggplot(pred3, aes(x = (Age), y = prob, colour = variable)) +
+ggplot(pred3, aes(x = Age, y = prob, color = Response)) +
   geom_point() +
   labs(title = "Who should have two armrests in a row of three seats?",
     subtitle = "Predicted probability that someone in each category would choose each response",
     x = "Age", y = "Probability of choosing response")+
-  scale_fill_discrete(name = "Response")+
   theme_minimal()+
   facet_grid(Gender ~ ., scales = "free")
 

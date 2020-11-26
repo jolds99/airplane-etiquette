@@ -58,29 +58,29 @@ ggplot(babyunruly, aes(x = Question, fill = factor(Response))) +
 nrow(airplane_etiquette)-
   length(which(is.na(`Do you ever recline your seat when you fly?`) | is.na(`How tall are you?`)))
 
-recline <- airplane_etiquette[-which(is.na(`Do you ever recline your seat when you fly?`) | is.na(`How tall are you?`)),]
-colnames(recline)[c(3,4)] <- c("recline", "height")
-length(which(recline$height=="6\'6\" and above"))
-length(which(recline$height=="Under 5 ft."))
+q2 <- airplane_etiquette[-which(is.na(`Do you ever recline your seat when you fly?`) | is.na(`How tall are you?`)),]
+colnames(q2)[c(3,4)] <- c("recline", "height")
+length(which(q2$height=="6\'6\" and above"))
+length(which(q2$height=="Under 5 ft."))
 
-recline <- recline %>%
+q2 <- q2 %>%
   mutate(height = if_else(height == "6\'6\" and above","6\'6\"", height)) %>%
   mutate(height = if_else(height == "Under 5 ft.","5\'0\"", height))
 
-recline$inches = sapply(strsplit(as.character(recline$height),"'|\""),
+q2$inches = sapply(strsplit(as.character(q2$height),"'|\""),
                          function(x){12*as.numeric(x[1]) + as.numeric(x[2])})
 
-ggplot(data = recline, aes(x=inches))+geom_histogram(bins=19, color = "black", fill = "#0073C2FF")+
+ggplot(data = q2, aes(x=inches))+geom_histogram(bins=19, color = "black", fill = "#0073C2FF")+
   labs(x= "Height (in)", y= "Frequency", title = "Distribution of Heights of Respondents")+
   theme_minimal()
   
-recline$recline <- factor(recline$recline, levels=c("Never", "Once in a while", "About half the time", "Usually", "Always"))
-ggplot(data = recline, aes(x=recline))+ geom_bar(color = "black", fill = "#0073C2FF")+
+q2$recline <- factor(q2$recline, levels=c("Never", "Once in a while", "About half the time", "Usually", "Always"))
+ggplot(data = q2, aes(x=recline))+ geom_bar(color = "black", fill = "#0073C2FF")+
   labs(x= "Response to \'Do you ever recline your seat when you fly?\'", y= "Frequency", title = "Distribution of Reclining Responses")+
   theme_minimal()
 
 library(kableExtra)
-reclinetab <- recline %>%
+reclinetab <- q2 %>%
   count(recline, inches) %>% spread(inches,n)
 kable(reclinetab, format = "latex") %>%
   kable_styling(latex_options="scale_down")

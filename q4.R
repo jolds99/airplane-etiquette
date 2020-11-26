@@ -30,6 +30,7 @@ ggplot(data = q4, aes(x = seats2, fill = Age)) +
   labs(title = "Who should have claim over the middle armrest in a row of two seats?",
        subtitle = "Separated by Gender", x = "Response", y = "Frequency") +
   theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90))
   facet_grid(~ Gender)
   
 #3 seats
@@ -38,6 +39,7 @@ ggplot(data = q4, aes(x = seats3, fill = Age)) +
   labs(title = "Who should have two armrests in a row of three seats?",
        subtitle = "Separated by Gender", x = "Response", y = "Frequency") +
   theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90))
   facet_grid(~ Gender)
 
 #Initial multinomial regression test

@@ -2,6 +2,8 @@
 library(tidyverse)
 library(ggplot2)
 library(knitr)
+
+
 #### Tolerance of Babies and Children ####
 airplane_etiquette = read_csv("airplane-etiquette.csv")
 attach(airplane_etiquette)

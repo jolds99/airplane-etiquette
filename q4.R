@@ -30,8 +30,9 @@ ggplot(data = q4, aes(x = seats2, fill = Age)) +
   labs(title = "Who should have claim over the middle armrest in a row of two seats?",
        subtitle = "Separated by Gender", x = "Response", y = "Frequency") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90))
-  facet_grid(~ Gender)
+  theme(axis.text.x = element_text(angle = 90))+
+  facet_wrap(~ Gender) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 20))
   
 #3 seats
 ggplot(data = q4, aes(x = seats3, fill = Age)) +
@@ -39,12 +40,16 @@ ggplot(data = q4, aes(x = seats3, fill = Age)) +
   labs(title = "Who should have two armrests in a row of three seats?",
        subtitle = "Separated by Gender", x = "Response", y = "Frequency") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90))
-  facet_grid(~ Gender)
+  theme(axis.text.x = element_text(angle = 90)) +
+  facet_grid(~ Gender) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 20))
 
 #Initial multinomial regression test
 twoseat <- multinom(seats2 ~ Gender + Age, data = q4)
-summary(twoseat)
+twoseatoutput <- summary(twoseat)
+z2 <- twoseatoutput$coefficients/twoseatoutput$standard.errors
+p2 <- (1-pnorm(abs(z2),0,1))*2 # I am using two-tailed z test
+print(p2, digits =2)
 
 maledf2 <- data.frame(Age = c("18-29", "30-44", "45-60", "60+" ), Gender = "Male")
 malepred2 <- predict(twoseat, newdata = maledf2, "probs")
@@ -56,19 +61,19 @@ pred2 <- rbind(malepred2, femalepred2)
 pred2 <- melt(pred2, value.name = "prob")%>%
   rename("Response" = "variable")
 
-ggplot(pred2, aes(x = Age, y = prob, colour = Response)) +
+ggplot(pred2, aes(x = Age, y = prob, colour = Response, shape = Gender)) +
   geom_point() +
   labs(title = "Who should have claim over the middle armrest in a row of two seats?",
        subtitle = "Predicted probability that someone in each category would choose each response",
        x = "Age", y = "Probability of choosing response")+
-  theme_minimal()+
-  facet_grid(Gender ~ ., scales = "free")
+  theme_minimal()
 
 
 threeseat <- multinom(seats3 ~ Gender + Age, data = q4)
-summary(threeseat)
-z3 <- summary(threeseat)$coefficients/summary(threeseat)$standard.errors
-p3 <- (1 - pnorm(abs(z3), 0, 1)) * 2; p3
+threeseatoutput <- summary(threeseat)
+z3 <- threeseatoutput$coefficients/threeseatoutput$standard.errors
+p3 <- (1-pnorm(abs(z3),0,1))*2 # I am using two-tailed z test
+print(p3, digits =2)
 
 maledf3 <- data.frame(Age = c("18-29", "30-44", "45-60", "60+" ), Gender = "Male")
 malepred3 <- predict(threeseat, newdata = maledf3, "probs")
@@ -80,16 +85,25 @@ pred3 <- rbind(malepred3, femalepred3)
 pred3 <- melt(pred3, value.name = "prob") %>%
   rename("Response" = "variable")
 
-ggplot(pred3, aes(x = Age, y = prob, color = Response)) +
+ggplot(pred3, aes(x = Age, y = prob, colour = Response, shape = Gender)) +
   geom_point() +
   labs(title = "Who should have two armrests in a row of three seats?",
     subtitle = "Predicted probability that someone in each category would choose each response",
     x = "Age", y = "Probability of choosing response")+
-  theme_minimal()+
-  facet_grid(Gender ~ ., scales = "free")
+  theme_minimal()
 
 chisq.test(q4$Age, q4$seats3)
 chisq.test(q4$Gender, q4$seats3)
+chisq.test(q4$group, q4$seats3)
 chisq.test(q4$Age, q4$seats2)
 chisq.test(q4$Gender, q4$seats2)
+chisq.test(q4$group, q4$seats2)
 
+q4 <- q4 %>%
+  mutate(group = paste0(Age, " ", Gender))
+
+
+kruskal_test(seats2 ~ group, data = q4)
+kruskal_test(seats3 ~ group, data = q4)
+pairwise.wilcox.test(PlantGrowth$weight, PlantGrowth$group,
+                     p.adjust.method = "BH")

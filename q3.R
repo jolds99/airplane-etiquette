@@ -43,10 +43,10 @@ airplane_etiquette = read_csv("airplane-etiquette.csv")
       travelfreq[[columnname]] = ifelse((travelfreq[[columnname]] == "No, not rude at all" | travelfreq[[columnname]] == "No, not at all rude"), "No", "Yes")
     }
      
-
+    # Applying Function
     travelfreq[,2:10] <- lapply(colnames(travelfreq[,2:10]), rude_group_function)
     
-    
+    # Creating variable summing total number of rude behaviors
     travelfreq = travelfreq %>% rowwise %>% mutate(Rude_Count = sum(Unsold_Seat == "Yes",  
                                                            Talk_Stranger == "Yes",
                                                            Recline_Seat == "Yes",
@@ -56,18 +56,53 @@ airplane_etiquette = read_csv("airplane-etiquette.csv")
                                                            Wake_Walk == "Yes",
                                                            Bring_Baby == "Yes",
                                                            Bring_Children == "Yes"))
-  
+    
+    # Plotting Density of Rude Count by Travel Frequency
     mu <- ddply(travelfreq, "Travel_Frequency", summarise, grp.mean=mean(Rude_Count))
-    ggplot(travelfreq, aes(x = Rude_Count, color = Travel_Frequency)) + geom_density() + 
+    ggplot(travelfreq, aes(x = Rude_Count, color = Travel_Frequency, fill = Travel_Frequency)) +
+      geom_density(alpha = 0.2) + 
       geom_vline(data=mu, aes(xintercept=grp.mean, color = Travel_Frequency),
-                 linetype="dashed") + 
+                 linetype="dashed", lwd = 0.75) + 
       scale_x_continuous(breaks = seq(0,10,2))
     
     travelfreq = travelfreq %>% group_by(Travel_Frequency) %>% mutate(mean = mean(Rude_Count))
+    
+    # Plotting Rude Count to check for normality
+   ggplot(travelfreq, aes(x = Rude_Count, color = Travel_Frequency, fill = Travel_Frequency)) + 
+      geom_histogram(alpha = 0.25, position = "identity", bins = 10)
+   
+   # Equal variance test
+    var.test(Rude_Count ~ Travel_Frequency, alternative = "two.sided", data = travelfreq)
 
+  # T Test
     t.test(travelfreq[which(travelfreq$Travel_Frequency == "No more than once a year"),11],
            travelfreq[which(travelfreq$Travel_Frequency == "More than once a year"), 11],
-           alternative = "two.sided", var.equal = FALSE)
+           alternative = "two.sided", var.equal = TRUE)
     
-    travelfreq %>% group_by(Travel_Frequency) %>%  
+  # Wilcox Test
+    wilcox.test(x$Rude_Count,y$Rude_Count,
+           alternative = "two.sided", var.equal = TRUE)
     
+    ## Comparing each individual behavior
+    propyes = function(column){
+      sum(column == "Yes")/sum(column == "Yes" | column == "No")
+    }
+    
+    sumyes = function(column){
+      sum(column == "Yes")
+    }
+  
+   travelfreqsum = travelfreq %>% group_by(Travel_Frequency) %>% select(Unsold_Seat:Bring_Children) %>% summarise_all(sumyes)
+   travelfreqprop = travelfreq %>% group_by(Travel_Frequency) %>% select(Unsold_Seat:Bring_Children) %>% summarise_all(propyes)
+                        
+   travelfreqib = rbind(travelfreqsum, travelfreqprop)  
+   
+   n_no = 614
+   n_more = 235
+   
+   # Proportions test to see if groups vary on reclining seat
+   prop.test(x = c(travelfreqib$Recline_Seat[1:2]), n = c(n_more, n_no), correct = FALSE)
+   
+   # Proportions test to see if groups vary on walking to walk around
+   prop.test(x = c(travelfreqib$Wake_Walk[1:2]), n = c(n_more, n_no), correct = FALSE)
+   

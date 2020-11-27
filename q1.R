@@ -93,6 +93,24 @@ library(knitr)
     prop.test(x = sum(babyunruly$Have_Children == "No" & babyunruly$Baby == "Yes"), 
               n = sum(babyunruly$Have_Children == "No"), conf.level = .95, correct = FALSE)
     
+    babies_df = as.data.frame(as.matrix(NA, nrow = 2, ncol = 4))
+    babies_df[1,1:4] = c("Children", 0.159, 0.107, 0.212)
+    babies_df[2,1:4] = c("No Children", 0.342, 0.306, 0.379)
+    colnames(babies_df) = c("Own Children?", "P Estimate", "CI Lower Bound", "CI Upper Bound")
+    babies_df[,2:4] = lapply(babies_df[,2:4], as.numeric)
+    
+    
+    ggplot(babies_df, aes(x =`P Estimate`, y = `Own Children?`, color = `Own Children?`)) + 
+      geom_point() + 
+      scale_x_continuous(name = "Proportion of Airplane Travellers that Perceive Bringing a Baby on a Plane as Rude ", limits = c(0,0.5)) + 
+      scale_color_manual(values = c("red", "blue")) + 
+      geom_segment(aes(x = babies_df$`CI Lower Bound`[1], y = "Children", 
+                       xend = babies_df$`CI Upper Bound`[1], yend = "Children"), color = "red") + 
+      geom_segment(aes(x = babies_df$`CI Lower Bound`[2], y = "No Children", 
+                       xend = babies_df$`CI Upper Bound`[2], yend = "No Children"), color = "blue") + 
+      ggtitle("Point Estimates of Proportion that Perceive Bringing a Baby on a Plane as Rude with 95% CI") + 
+      theme(plot.title = element_text(hjust = 0.5))
+    
     # Test of Proportions
     babies_test <- prop.test(x = c(sum(babyunruly$Have_Children == "Yes" & babyunruly$Baby == "Yes"),
                                    sum(babyunruly$Have_Children == "No" & babyunruly$Baby == "Yes")),
@@ -133,6 +151,24 @@ library(knitr)
     
     prop.test(x = sum(babyunruly$Have_Children == "No" & babyunruly$Unruly_Children == "Yes"), 
               n = sum(babyunruly$Have_Children == "No"), conf.level = .95, correct = FALSE)
+    
+    unruly_df = as.data.frame(as.matrix(NA, nrow = 2, ncol = 4))
+    unruly_df[1,1:4] = c("Children", 0.734, 0.671, 0.797)
+    unruly_df[2,1:4] = c("No Children", 0.854, 0.827, 0.880)
+    colnames(unruly_df) = c("Own Children?", "P Estimate", "CI Lower Bound", "CI Upper Bound")
+    unruly_df[,2:4] = lapply(unruly_df[,2:4], as.numeric)
+    
+    
+    ggplot(unruly_df, aes(x =`P Estimate`, y = `Own Children?`, color = `Own Children?`)) + 
+      geom_point() + 
+      scale_x_continuous(name = "Proportion of Airplane Travellers that Perceive Bringing Unruly Children on a Plane as Rude ", limits = c(0.5,1)) + 
+      scale_color_manual(values = c("red", "blue")) + 
+      geom_segment(aes(x = unruly_df$`CI Lower Bound`[1], y = "Children", 
+                       xend = unruly_df$`CI Upper Bound`[1], yend = "Children"), color = "red") + 
+      geom_segment(aes(x = unruly_df$`CI Lower Bound`[2], y = "No Children", 
+                       xend = unruly_df$`CI Upper Bound`[2], yend = "No Children"), color = "blue") + 
+      ggtitle("Point Estimates of Proportion that Perceive Bringing a Baby on a Plane as Rude with 95% CI") + 
+      theme(plot.title = element_text(hjust = 0.5))
     
     ## Test of Proportions
     unruly_test <- prop.test(x = c(sum(babyunruly$Have_Children == "Yes" & babyunruly$Unruly_Children == "Yes"),

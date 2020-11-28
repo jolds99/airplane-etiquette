@@ -57,13 +57,20 @@ airplane_etiquette = read_csv("airplane-etiquette.csv")
                                                            Bring_Baby == "Yes",
                                                            Bring_Children == "Yes"))
     
+    colnames(travelfreq)[1] = "Travel Frequency"
+    
     # Plotting Density of Rude Count by Travel Frequency
     mu <- ddply(travelfreq, "Travel_Frequency", summarise, grp.mean=mean(Rude_Count))
+    
     ggplot(travelfreq, aes(x = Rude_Count, color = Travel_Frequency, fill = Travel_Frequency)) +
       geom_density(alpha = 0.2) + 
       geom_vline(data=mu, aes(xintercept=grp.mean, color = Travel_Frequency),
                  linetype="dashed", lwd = 0.75) + 
-      scale_x_continuous(breaks = seq(0,10,2))
+      scale_x_continuous(breaks = seq(0,10,2)) + 
+      ggtitle("Density Plot of Total Count of Behaviors Believed to Be Rude by Flyer Group") + 
+      theme(plot.title = element_text(hjust = 0.5)) + 
+      xlab("Rude Count") + 
+      labs(fill = "Travel Frequency", col = "Travel Frequency")
     
     travelfreq = travelfreq %>% group_by(Travel_Frequency) %>% mutate(mean = mean(Rude_Count))
     
@@ -85,7 +92,7 @@ airplane_etiquette = read_csv("airplane-etiquette.csv")
     
     ## Comparing each individual behavior
     propyes = function(column){
-      sum(column == "Yes")/sum(column == "Yes" | column == "No")
+      round(sum(column == "Yes")/sum(column == "Yes" | column == "No"),3)
     }
     
     sumyes = function(column){
@@ -94,14 +101,16 @@ airplane_etiquette = read_csv("airplane-etiquette.csv")
   
    travelfreqsum = travelfreq %>% group_by(Travel_Frequency) %>% select(Unsold_Seat:Bring_Children) %>% summarise_all(sumyes)
    travelfreqprop = travelfreq %>% group_by(Travel_Frequency) %>% select(Unsold_Seat:Bring_Children) %>% summarise_all(propyes)
-                        
+              
+   kable(travelfreqprop, format = "latex")          
    travelfreqib = rbind(travelfreqsum, travelfreqprop)  
    
    n_no = 614
    n_more = 235
    
    # Proportions test to see if groups vary on reclining seat
-   prop.test(x = c(travelfreqib$Recline_Seat[1:2]), n = c(n_more, n_no), correct = FALSE)
+   prop.test(x = c(travelfreqib$Recline_Seat[1:2]), n = c(n_more, n_no), correct = FALSE, 
+             alternative = "greater")
    
    # Proportions test to see if groups vary on walking to walk around
    prop.test(x = c(travelfreqib$Wake_Walk[1:2]), n = c(n_more, n_no), correct = FALSE)

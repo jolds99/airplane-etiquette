@@ -108,13 +108,13 @@ library(knitr)
                        xend = babies_df$`CI Upper Bound`[1], yend = "Children"), color = "red") + 
       geom_segment(aes(x = babies_df$`CI Lower Bound`[2], y = "No Children", 
                        xend = babies_df$`CI Upper Bound`[2], yend = "No Children"), color = "blue") + 
-      ggtitle("Point Estimates of Proportion that Perceive Bringing a Baby on a Plane as Rude with 95% CI") + 
+      ggtitle("Point Estimates of the Population Proportions that Perceive Bringing a Baby on a Plane as Rude with 95% CI") + 
       theme(plot.title = element_text(hjust = 0.5))
     
     # Test of Proportions
     babies_test <- prop.test(x = c(sum(babyunruly$Have_Children == "Yes" & babyunruly$Baby == "Yes"),
                                    sum(babyunruly$Have_Children == "No" & babyunruly$Baby == "Yes")),
-                             n = c(sum(babyunruly$Have_Children == "Yes"), sum(babyunruly$Have_Children == "No")), correct = FALSE)
+                             n = c(sum(babyunruly$Have_Children == "Yes"), sum(babyunruly$Have_Children == "No")), alternative = "less", correct = FALSE)
     
     babies_test
     
@@ -167,13 +167,13 @@ library(knitr)
                        xend = unruly_df$`CI Upper Bound`[1], yend = "Children"), color = "red") + 
       geom_segment(aes(x = unruly_df$`CI Lower Bound`[2], y = "No Children", 
                        xend = unruly_df$`CI Upper Bound`[2], yend = "No Children"), color = "blue") + 
-      ggtitle("Point Estimates of Proportion that Perceive Bringing a Baby on a Plane as Rude with 95% CI") + 
+      ggtitle("Point Estimates of the Population Proportions of Passengers that Perceive Bringing Unruly Children on a Plane as Rude with 95% CI") + 
       theme(plot.title = element_text(hjust = 0.5))
     
     ## Test of Proportions
     unruly_test <- prop.test(x = c(sum(babyunruly$Have_Children == "Yes" & babyunruly$Unruly_Children == "Yes"),
                                    sum(babyunruly$Have_Children == "No" & babyunruly$Unruly_Children == "Yes")),
-                             n = c(sum(babyunruly$Have_Children == "Yes"), sum(babyunruly$Have_Children == "No")), correct = FALSE)
+                             n = c(sum(babyunruly$Have_Children == "Yes"), sum(babyunruly$Have_Children == "No")), alternative = "less", correct = FALSE)
     
     unruly_test
     

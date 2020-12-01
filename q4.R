@@ -45,6 +45,7 @@ ggplot(data = q4, aes(x = seats3, fill = Age)) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 20))
 
 #Initial multinomial regression test
+#Rows with 2 seats
 twoseat <- multinom(seats2 ~ Gender + Age, data = q4)
 twoseatoutput <- summary(twoseat)
 z2 <- twoseatoutput$coefficients/twoseatoutput$standard.errors
@@ -61,6 +62,7 @@ pred2 <- rbind(malepred2, femalepred2)
 pred2 <- melt(pred2, value.name = "prob")%>%
   rename("Response" = "variable")
 
+#Plotting predictions
 ggplot(pred2, aes(x = Age, y = prob, colour = Response, shape = Gender)) +
   geom_point() +
   labs(title = "Who should have claim over the middle armrest in a row of two seats?",
@@ -68,7 +70,7 @@ ggplot(pred2, aes(x = Age, y = prob, colour = Response, shape = Gender)) +
        x = "Age", y = "Probability of choosing response")+
   theme_minimal()
 
-
+#Rows with three seats
 threeseat <- multinom(seats3 ~ Gender + Age, data = q4)
 threeseatoutput <- summary(threeseat)
 z3 <- threeseatoutput$coefficients/threeseatoutput$standard.errors
@@ -85,25 +87,10 @@ pred3 <- rbind(malepred3, femalepred3)
 pred3 <- melt(pred3, value.name = "prob") %>%
   rename("Response" = "variable")
 
+#Plotting predictions
 ggplot(pred3, aes(x = Age, y = prob, colour = Response, shape = Gender)) +
   geom_point() +
   labs(title = "Who should have two armrests in a row of three seats?",
     subtitle = "Predicted probability that someone in each category would choose each response",
     x = "Age", y = "Probability of choosing response")+
   theme_minimal()
-
-chisq.test(q4$Age, q4$seats3)
-chisq.test(q4$Gender, q4$seats3)
-chisq.test(q4$group, q4$seats3)
-chisq.test(q4$Age, q4$seats2)
-chisq.test(q4$Gender, q4$seats2)
-chisq.test(q4$group, q4$seats2)
-
-q4 <- q4 %>%
-  mutate(group = paste0(Age, " ", Gender))
-
-
-kruskal_test(seats2 ~ group, data = q4)
-kruskal_test(seats3 ~ group, data = q4)
-pairwise.wilcox.test(PlantGrowth$weight, PlantGrowth$group,
-                     p.adjust.method = "BH")

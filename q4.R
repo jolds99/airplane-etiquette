@@ -5,6 +5,7 @@ library(ggplot2)
 library(data.table)
 library(gplots)
 library(caret)
+library(kableExtra)
 
 #Getting data only necessary for question 4
 q4 <- airplane_etiquette %>%
@@ -94,3 +95,15 @@ ggplot(pred3, aes(x = Age, y = prob, colour = Response, shape = Gender)) +
     subtitle = "Predicted probability that someone in each category would choose each response",
     x = "Age", y = "Probability of choosing response")+
   theme_minimal()
+
+
+mean(q4$seats3 == 'The arm rests should be shared')
+mean(q4$seats2 == 'The arm rests should be shared')
+nrow(q4)
+
+
+
+kable(with(q4, table(seats2)) %>% prop.table(), format = "latex") %>%
+  kable_styling(latex_options="scale_down")
+
+           

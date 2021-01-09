@@ -6,7 +6,7 @@ We utilized data that was collected by Walter Hickey from the website FiveThirty
 
 **Q2: Is the height of an individual a clear indicator for his/hers likelihood to recline an airplane seat?** 
 
-**Q3: Is there a relationship between the frequency with which a person flies, and the number of behaviors they consider as rude?** 
+**Q3: Is there a relationship between the frequency with which a person flies, and the number of behaviors they consider to be rude?** 
 
 **Q4: How does an individual’s gender and age affect their opinion of who can claim a shared armrest on an airplane?** 
 

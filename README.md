@@ -1,5 +1,5 @@
 # airplane-etiquette
-This repository contains the R scripts, csv data files and pdf final report of a group project conducted in fall 2020 by Quinn Jonnson and Jonathan Olds to fulfill a major class requirement in STAT 305 - Sampling Methods.
+This repository contains the R scripts, csv data files and pdf final report of a group project conducted in November and December 2020 by Quinn Jonnson and Jonathan Olds to fulfill a major class requirement in STAT 305 - Sampling Methods.
 The project used a survey conducted by Walter Hickey from the website FiveThirtyEight in which the flight behaviors and perceptions of those behaviors of 1,041 airline travellers were examined. Our goal with the project was to answer the following four research questions using various statistical methods. 
 
 ** Q1: Are parents that currently have children under the age of 18 more tolerant of babies or unruly children on airplanes? **
